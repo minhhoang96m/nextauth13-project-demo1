@@ -18,9 +18,9 @@ export const POST = async (request: Request) => {
         })
         if (
             user &&
-            (await bcrypt.compare(body.password, user.password as string))
+            (await bcrypt.compare(body.password, user.hashedPassword as string))
         ) {
-            const {password, access_token, refresh_token, ...userWithoutPass} =
+            const {hashedPassword, access_token, refresh_token, ...userWithoutPass} =
                 user
             const access_tokens = signJwtAccessToken(userWithoutPass)
             const refresh_tokens = signJwtRefreshToken(userWithoutPass)

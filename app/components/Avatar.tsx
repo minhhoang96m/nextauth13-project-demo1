@@ -1,21 +1,56 @@
-'use client';
+import Image from 'next/image'
+import {useRouter} from 'next/navigation'
+import {useCallback} from 'react'
 
-import Image from "next/image";
+import useUser from '@/hooks/useUser'
 
 interface AvatarProps {
-  src: string | null | undefined;
+  usersId: string 
+  isLarge?: boolean
+  hasBorder?: boolean
 }
 
-const Avatar: React.FC<AvatarProps> = ({ src }) => {
-  return ( 
-    <Image 
-      className="rounded-full" 
-      height="30" 
-      width="30" 
-      alt="Avatar" 
-      src={src || '/images/placeholder.jpg'}
-    />
-   );
+const Avatar: React.FC<AvatarProps> = ({usersId, isLarge, hasBorder}) => {
+  const router = useRouter()
+
+  const {data: fetchedUser} = useUser(usersId)
+
+  const onClick = useCallback(
+    (event: any) => {
+      event.stopPropagation()
+
+      const url = `twitter/users/${usersId}`
+
+      router.push(url)
+    },
+    [router, usersId]
+  )
+
+  return (
+    <div
+      className={`
+        ${hasBorder ? 'border-4 border-black' : ''}
+        ${isLarge ? 'h-32' : 'h-12'}
+        ${isLarge ? 'w-32' : 'w-12'}
+        rounded-full 
+        hover:opacity-90 
+        transition 
+        cursor-pointer
+        relative
+      `}
+    >
+      <Image
+        fill
+        style={{
+          objectFit: 'cover',
+          borderRadius: '100%',
+        }}
+        alt='Avatar'
+        onClick={onClick}
+        src={fetchedUser?.image || '/images/placeholder.png'}
+      />
+    </div>
+  )
 }
- 
-export default Avatar;
+
+export default Avatar

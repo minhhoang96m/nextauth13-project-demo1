@@ -1,11 +1,11 @@
-import bcrypt from 'bcrypt'
+import {signJwtAccessToken, signJwtRefreshToken} from '@/lib/jwt'
 import prisma from '@/lib/prisma'
 import {PrismaAdapter} from '@next-auth/prisma-adapter'
+import bcrypt from 'bcrypt'
 import NextAuth, {AuthOptions} from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GithubProvider from 'next-auth/providers/github'
 import GoogleProvider from 'next-auth/providers/google'
-import {signJwtAccessToken, signJwtRefreshToken} from '@/lib/jwt'
 
 const handler: AuthOptions = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -35,20 +35,24 @@ const handler: AuthOptions = NextAuth({
           },
         })
 
-        if (!user || !user?.password) {
+        if (!user || !user?.hashedPassword) {
           throw new Error('Invalid credentials')
         }
 
         const isCorrectPassword = await bcrypt.compare(
           credentials.password,
-          user.password
+          user.hashedPassword
         )
 
         if (!isCorrectPassword) {
           throw new Error('Invalid credentials')
         } else {
-          const {password, access_token, refresh_token, ...userWithoutPass} =
-            user
+          const {
+            hashedPassword,
+            access_token,
+            refresh_token,
+            ...userWithoutPass
+          } = user
           const access_tokens = signJwtAccessToken(userWithoutPass)
           const refresh_tokens = signJwtRefreshToken(userWithoutPass)
           if (refresh_token === null) {
@@ -82,6 +86,7 @@ const handler: AuthOptions = NextAuth({
       },
     }),
   ],
+  debug: process.env.NODE_ENV === 'development',
   session: {
     strategy: 'jwt',
   },
@@ -91,6 +96,7 @@ const handler: AuthOptions = NextAuth({
     },
     async session({session, token}) {
       session.user = token as any
+
       return session
     },
   },
@@ -99,4 +105,4 @@ const handler: AuthOptions = NextAuth({
   },
 })
 
-export {handler as GET, handler as POST}
+export {handler as GET, handler as POST, handler as PUT, handler as DELETE}

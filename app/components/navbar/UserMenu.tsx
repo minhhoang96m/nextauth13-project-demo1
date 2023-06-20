@@ -7,7 +7,7 @@ import {AiOutlineMenu} from 'react-icons/ai'
 import useLoginModal from '@/hooks/useLoginModal'
 import useRegisterModal from '@/hooks/useRegisterModal'
 import {User} from '@/lib/types/interface'
-import Avatar from '../Avatar'
+import Avatars from '../Avatars'
 import MenuItem from './MenuItem'
 
 interface UserMenuProps {
@@ -36,9 +36,13 @@ const UserMenu: React.FC<UserMenuProps> = ({currentUser}) => {
             py-3 
             px-4 
             rounded-full 
+            select-none
             hover:bg-neutral-100 
             transition 
             cursor-pointer
+            dark:text-white
+            dark:bg-black
+            dark:hover:bg-[#1e293b]
           '
         >
           Airbnb your home
@@ -59,11 +63,12 @@ const UserMenu: React.FC<UserMenuProps> = ({currentUser}) => {
           cursor-pointer 
           hover:shadow-md 
           transition
+          dark:bg-black
           '
         >
           <AiOutlineMenu />
           <div className='hidden md:block'>
-            <Avatar src={currentUser?.image} />
+            <Avatars src={currentUser?.image} />
           </div>
         </div>
       </div>
@@ -80,16 +85,17 @@ const UserMenu: React.FC<UserMenuProps> = ({currentUser}) => {
             right-0 
             top-12 
             text-sm
+            dark:bg-black
           '
         >
-          <div className='flex flex-col cursor-pointer'>
+          <div className='flex flex-col cursor-pointer dark:text-white '>
             {currentUser ? (
               <>
-                <MenuItem label='Logout' onClick={() => signOut()} />
+                <MenuItem label='Log out' onClick={() => signOut()} />
               </>
             ) : (
               <>
-                <MenuItem label='Login' onClick={loginModal.onOpen} />
+                <MenuItem label='Log in' onClick={loginModal.onOpen} />
                 <MenuItem label='Sign up' onClick={registerModal.onOpen} />
               </>
             )}
