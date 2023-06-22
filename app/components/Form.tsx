@@ -5,27 +5,28 @@ import {useCallback, useState} from 'react'
 import {toast} from 'react-hot-toast'
 
 import useLoginModal from '@/hooks/useLoginModal'
-import useRegisterModal from '@/hooks/useRegisterModal'
-import useCurrentUser from '@/hooks/useCurrentUser'
-import usePosts from '@/hooks/usePosts'
 import usePost from '@/hooks/usePost'
+import usePosts from '@/hooks/usePosts'
+import useRegisterModal from '@/hooks/useRegisterModal'
 
+import {useSession} from 'next-auth/react'
 import Avatar from './Avatar'
 import Button from './Button'
 
 interface FormProps {
   placeholder: string
   isComment?: boolean
-  usersId?: string
+  postId?: string
 }
 
-const Form: React.FC<FormProps> = ({placeholder, isComment, usersId}) => {
+const Form: React.FC<FormProps> = ({placeholder, isComment, postId}) => {
   const registerModal = useRegisterModal()
   const loginModal = useLoginModal()
+  const {data: currentUser} = useSession()
+  const userId = currentUser?.user.id
 
-  const {data: currentUser} = useCurrentUser()
-  const {mutate: mutatePosts} = usePosts()
-  const {mutate: mutatePost} = usePost(usersId as string)
+  const {mutate: mutatePosts} = usePosts(postId)
+  const {mutate: mutatePost} = usePost(userId as string)
 
   const [body, setBody] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -34,9 +35,9 @@ const Form: React.FC<FormProps> = ({placeholder, isComment, usersId}) => {
     try {
       setIsLoading(true)
 
-      const url = isComment ? `/api/comments/${usersId}` : '/api/posts'
+      const url = isComment ? `/api/comments/${postId}` : '/api/posts'
 
-      await axios.post(url, {body})
+      await axios.post(url, {data: {userId, body}})
 
       toast.success('Tweet created')
       setBody('')
@@ -47,14 +48,14 @@ const Form: React.FC<FormProps> = ({placeholder, isComment, usersId}) => {
     } finally {
       setIsLoading(false)
     }
-  }, [body, mutatePosts, isComment, usersId, mutatePost])
+  }, [body, mutatePosts, isComment, postId, mutatePost])
 
   return (
     <div className='border-b-[1px] border-neutral-800 px-5 py-2'>
       {currentUser ? (
         <div className='flex flex-row gap-4'>
           <div>
-            <Avatar usersId={currentUser?.id} />
+            <Avatar usersId={currentUser?.user.id} />
           </div>
           <div className='w-full'>
             <textarea
@@ -73,6 +74,9 @@ const Form: React.FC<FormProps> = ({placeholder, isComment, usersId}) => {
                 text-[20px] 
                 placeholder-neutral-500 
                 text-white
+                dark:bg-white
+                dark:text-black
+                
               '
               placeholder={placeholder}
             ></textarea>
@@ -96,7 +100,7 @@ const Form: React.FC<FormProps> = ({placeholder, isComment, usersId}) => {
         </div>
       ) : (
         <div className='py-8'>
-          <h1 className='text-white text-2xl text-center mb-4 font-bold'>
+          <h1 className='text-white text-2xl text-center mb-4 font-bold dark:text-black'>
             Welcome to Twitter
           </h1>
           <div className='flex flex-row items-center justify-center gap-4'>

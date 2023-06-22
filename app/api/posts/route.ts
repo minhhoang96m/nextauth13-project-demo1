@@ -29,23 +29,22 @@ export const GET = async (request: Request) => {
 export const POST = async (request: Request) => {
   try {
     const currentUser = await getSession()
-    const {body}: any = await request.json()
-    if (currentUser) {
-      const post = await prisma.post.create({
-        data: {
-          body,
-          user: {
-            connect: {
-              email: currentUser.user.email as string,
-            },
+    const header = await request.json()
+    const body : string = header.data.body
+
+    const post = await prisma.post.create({
+      data: {
+        body,
+        user: {
+          connect: {
+            email: currentUser?.user.email as string,
           },
         },
-      })
-      return new Response(JSON.stringify(post))
-    }
-    return new Response().status
+      },
+    })
+    return new Response(JSON.stringify(post))
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return new Response().status
   }
 }

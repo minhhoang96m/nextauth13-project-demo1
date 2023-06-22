@@ -98,7 +98,7 @@ const Modal: React.FC<ModalProps> = ({
           md:h-auto
           '
         >
-          {/*content*/}
+          {/* content */}
           <div
             className={`
             translate
@@ -146,12 +146,13 @@ const Modal: React.FC<ModalProps> = ({
                     transition
                     absolute
                     left-9
+                    dark:text-black
                   '
                   onClick={handleClose}
                 >
                   <IoMdClose size={18} />
                 </button>
-                <div className='text-lg font-semibold'>{title}</div>
+                <div className='text-lg font-semibold dark:text-black'>{title}</div>
               </div>
               {/*body*/}
               <div className='relative p-6 flex-auto'>{body}</div>

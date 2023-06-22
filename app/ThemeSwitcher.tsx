@@ -33,7 +33,7 @@ const ThemeSwitcher = ({children}: typeChildren) => {
     <>
       <div className='relative'>
         <div>{children}</div>
-        <div className='fixed top-[6rem] left-[0.5rem] z-5 select-none'>
+        <div className='fixed top-[1rem] right-[0.8rem] z-5 select-none'>
           <Switch checked={checked} onCheckedChange={handleChange} />
         </div>
       </div>

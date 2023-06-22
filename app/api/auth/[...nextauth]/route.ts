@@ -1,8 +1,7 @@
-import {signJwtAccessToken, signJwtRefreshToken} from '@/lib/jwt'
 import prisma from '@/lib/prisma'
-import {PrismaAdapter} from '@next-auth/prisma-adapter'
+import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import bcrypt from 'bcrypt'
-import NextAuth, {AuthOptions} from 'next-auth'
+import NextAuth, { AuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GithubProvider from 'next-auth/providers/github'
 import GoogleProvider from 'next-auth/providers/google'
@@ -31,7 +30,7 @@ const handler: AuthOptions = NextAuth({
 
         const user = await prisma.user.findUnique({
           where: {
-            email: credentials.email,
+            email: credentials.email as string,
           },
         })
 
@@ -47,41 +46,9 @@ const handler: AuthOptions = NextAuth({
         if (!isCorrectPassword) {
           throw new Error('Invalid credentials')
         } else {
-          const {
-            hashedPassword,
-            access_token,
-            refresh_token,
-            ...userWithoutPass
-          } = user
-          const access_tokens = signJwtAccessToken(userWithoutPass)
-          const refresh_tokens = signJwtRefreshToken(userWithoutPass)
-          if (refresh_token === null) {
-            await prisma.user.update({
-              where: {email: credentials.email},
-              data: {refresh_token: refresh_tokens},
-            })
-            const result = {
-              ...userWithoutPass,
-              access_token: access_tokens,
-              refresh_token: refresh_tokens,
-            }
-            return result
-          } else {
-            await prisma.user.update({
-              where: {email: credentials.email},
-              data: {refresh_token: null},
-            })
-            await prisma.user.update({
-              where: {email: credentials.email},
-              data: {refresh_token: refresh_tokens},
-            })
-            const result = {
-              ...userWithoutPass,
-              access_token: access_tokens,
-              refresh_token: refresh_tokens,
-            }
-            return result
-          }
+          const {hashedPassword, ...userWithoutPass} = user
+          
+          return userWithoutPass
         }
       },
     }),
@@ -101,8 +68,12 @@ const handler: AuthOptions = NextAuth({
     },
   },
   pages: {
-    signIn: '/user',
+    signIn: '/twitter',
   },
 })
 
-export {handler as GET, handler as POST, handler as PUT, handler as DELETE}
+export {
+  handler as DELETE, handler as GET, handler as PATCH, handler as POST,
+  handler as PUT
+}
+

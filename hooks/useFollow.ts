@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { useCallback, useMemo } from 'react'
-import { toast } from 'react-hot-toast'
+import {useCallback, useMemo} from 'react'
+import {toast} from 'react-hot-toast'
 
 import useCurrentUser from './useCurrentUser'
 import useLoginModal from './useLoginModal'
@@ -12,7 +12,7 @@ const useFollow = (usersId: string) => {
 
   const loginModal = useLoginModal()
 
-  const isFollowing = useMemo(() => {
+  const isFollowing: boolean = useMemo(() => {
     const list = currentUser?.followingIds || []
 
     return list.includes(usersId)
@@ -27,9 +27,9 @@ const useFollow = (usersId: string) => {
       let request
 
       if (isFollowing) {
-        request = () => axios.delete('/api/follow', {data: {usersId}})
+        request = () => axios.delete(`/api/follow/${usersId}`)
       } else {
-        request = () => axios.post('/api/follow', {data: {usersId}})
+        request = () => axios.post(`/api/follow/${usersId}`)
       }
 
       await request()
@@ -49,7 +49,6 @@ const useFollow = (usersId: string) => {
     mutateFetchedUser,
     loginModal,
   ])
-  console.log(isFollowing)
 
   return {
     isFollowing,

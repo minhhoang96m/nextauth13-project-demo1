@@ -1,27 +1,25 @@
+import {GET as authOptions} from '@/app/api/auth/[...nextauth]/route'
 import prisma from '@/lib/prisma'
-import serverAuth from '@/lib/serverAuth'
-import {NextApiRequest, NextApiResponse} from 'next'
+import {getServerSession} from 'next-auth'
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method !== 'PATCH') {
-    return res.status(405).end()
-  }
+export const getSession = async () => {
+  const session = await getServerSession(authOptions)
+  if (!session) return null
+  return session
+}
 
+export const PATCH = async (request: Request) => {
   try {
-    const {currentUser} = await serverAuth(req, res)
+    const currentUser = await getSession()
+    const {name, username, bio, profileImage, coverImage} = await request.json()
 
-    const {name, username, bio, profileImage, coverImage} = req.body
-
-    if (!name || !username) {
-      throw new Error('Missing fields')
+    if (!name) {
+      return new Response(JSON.stringify('Missing fields'))
     }
 
     const updatedUser = await prisma.user.update({
       where: {
-        id: currentUser.id,
+        email:  currentUser?.user.email as string,
       },
       data: {
         name,
@@ -32,9 +30,8 @@ export default async function handler(
       },
     })
 
-    return res.status(200).json(updatedUser)
+    return new Response(JSON.stringify(updatedUser))
   } catch (error) {
-    console.log(error)
-    return res.status(400).end()
+    return new Response(JSON.stringify(error))
   }
 }

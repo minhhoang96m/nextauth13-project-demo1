@@ -10,10 +10,11 @@ import useCurrentUser from '@/hooks/useCurrentUser'
 import SidebarItem from './SidebarItem'
 import SidebarLogo from './SidebarLogo'
 import SidebarTweetButton from './SidebarTweetButton'
+import { useEffect } from 'react'
 
 const Sidebar = () => {
-  const { data: currentUser } = useCurrentUser()
-
+  const { data: currentUser, mutate : mutateUser } = useCurrentUser()
+  mutateUser()
   const items = [
     {
       icon: BsHouseFill,
@@ -34,11 +35,11 @@ const Sidebar = () => {
       auth: true,
     },
   ]
-
+ 
   return (
     <div className='col-span-1 h-full pr-4 md:pr-6'>
-      <div className='flex flex-col items-end'>
-        <div className='space-y-2 lg:w-[230px]'>
+      <div className='flex flex-col items-end '>
+        <div className='space-y-2 lg:w-[230px] '>
           <SidebarLogo />
           {items.map((item) => (
             <SidebarItem
@@ -55,6 +56,7 @@ const Sidebar = () => {
               onClick={() => signOut()}
               icon={BiLogOut}
               label='Logout'
+              href='/twitter'
             />
           )}
           <SidebarTweetButton />

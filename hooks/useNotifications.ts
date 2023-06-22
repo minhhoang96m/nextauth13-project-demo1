@@ -2,8 +2,8 @@ import useSWR from 'swr';
 
 import fetcher from '@/lib/fetcher';
 
-const useNotifications = (userId?: string) => {
-  const url = userId ? `/api/notifications/${userId}` : null;
+const useNotifications = (usersId?: string) => {
+  const url = usersId ? `/api/notifications/${usersId}` : null;
   const { data, error, isLoading, mutate } = useSWR(url, fetcher);
 
   return {

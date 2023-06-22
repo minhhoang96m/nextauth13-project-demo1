@@ -5,7 +5,7 @@ import {useCallback} from 'react'
 import useUser from '@/hooks/useUser'
 
 interface AvatarProps {
-  usersId: string 
+  usersId: string
   isLarge?: boolean
   hasBorder?: boolean
 }
@@ -45,9 +45,11 @@ const Avatar: React.FC<AvatarProps> = ({usersId, isLarge, hasBorder}) => {
           objectFit: 'cover',
           borderRadius: '100%',
         }}
+        sizes='(max-width: 768px) 100vw'
+        priority={true}
         alt='Avatar'
         onClick={onClick}
-        src={fetchedUser?.image || '/images/placeholder.png'}
+        src={fetchedUser?.image || fetchedUser?.profileImage || fetchedUser?.coverImage || '/images/placeholder.png'}
       />
     </div>
   )

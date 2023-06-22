@@ -1,29 +1,31 @@
-import {NextApiRequest, NextApiResponse} from 'next'
-
-import serverAuth from '@/lib/serverAuth'
+import {POST as authOptions} from '@/app/api/auth/[...nextauth]/route'
 import prisma from '@/lib/prisma'
+import {getServerSession} from 'next-auth'
 
-export default async function POST(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method !== 'POST') {
-    return res.status(405).end()
-  }
+export const getSession = async () => {
+  const session = await getServerSession(authOptions)
+  if (!session) return null
+  return session
+}
 
+export const POST = async (
+  request: Request,
+  {params}: {params: {postId: string}}
+) => {
   try {
-    const currentUser = await serverAuth()
-    const {body} = req.body
-    const {postId} = req.query
-
-    if (!postId || typeof postId !== 'string') {
-      throw new Error('Invalid ID')
+    const currentUser = await getSession()
+    const header = await request.json()
+    const postId = params.postId
+    const userId : string = header.data.userId
+    const body : string = header.data.body
+    if (!currentUser) {
+      throw new Response(JSON.stringify('Invalid ID'))
     }
 
     const comment = await prisma.comment.create({
       data: {
         body,
-        userId: currentUser?.id as string,
+        userId: userId,
         postId,
       },
     })
@@ -58,9 +60,8 @@ export default async function POST(
     }
     // NOTIFICATION PART END
 
-    return res.status(200).json(comment)
+    return new Response(JSON.stringify(comment))
   } catch (error) {
-    console.log(error)
-    return res.status(400).end()
+    return new Response(JSON.stringify(error))
   }
 }

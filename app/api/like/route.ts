@@ -1,84 +1,115 @@
-import { NextApiRequest, NextApiResponse } from "next";
-
+import {POST as authOptions} from '@/app/api/auth/[...nextauth]/route'
 import prisma from '@/lib/prisma'
-import serverAuth from '@/lib/serverAuth'
+import {getServerSession} from 'next-auth'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST' && req.method !== 'DELETE') {
-    return res.status(405).end();
-  }
+export const getSession = async () => {
+  const session = await getServerSession(authOptions)
+  if (!session) return null
+  return session
+}
 
+export const POST = async (request: Request) => {
   try {
-    const { postId } = req.body;
+    const currentUser = await getSession()
+    const usersId = await request.json()
+    const postId: string = usersId.data.postId
+    const userId: string = usersId.data.userId
 
-    const { currentUser } = await serverAuth(req, res);
-
-    if (!postId || typeof postId !== 'string') {
-      throw new Error('Invalid ID');
+    if (!currentUser) {
+      throw new Response(JSON.stringify('Invalid ID'))
     }
 
-    const post = await prisma.post.findUnique({
+    const user = await prisma.post.findUnique({
       where: {
-        id: postId
-      }
-    });
+        id: postId,
+      },
+    })
 
-    if (!post) {
-      throw new Error('Invalid ID');
+    if (!user) {
+      throw new Response(JSON.stringify('Invalid ID'))
     }
 
-    let updatedLikedIds = [...(post.likedIds || [])];
+    let updatedLikedIds = [...(user.likedIds || [])]
 
-    if (req.method === 'POST') {
-      updatedLikedIds.push(currentUser.id);
-      
-      // NOTIFICATION PART START
-      try {
-        const post = await prisma.post.findUnique({
-          where: {
-            id: postId,
-          }
-        });
-    
-        if (post?.userId) {
-          await prisma.notification.create({
-            data: {
-              body: 'Someone liked your tweet!',
-              userId: post.userId
-            }
-          });
-    
-          await prisma.user.update({
-            where: {
-              id: post.userId
-            },
-            data: {
-              hasNotification: true
-            }
-          });
-        }
-      } catch(error) {
-        console.log(error);
-      }
-      // NOTIFICATION PART END
-    }
+    updatedLikedIds.push(userId)
 
-    if (req.method === 'DELETE') {
-      updatedLikedIds = updatedLikedIds.filter((likedId) => likedId !== currentUser?.id);
-    }
-
-    const updatedPost = await prisma.post.update({
+    await prisma.notification.create({
+      data: {
+        body: `${currentUser?.user.name} like you !`,
+        user: {
+          connect: {
+            id: user?.userId,
+          },
+        },
+      },
+    })
+    await prisma.user.update({
       where: {
-        id: postId
+        id: user.userId,
       },
       data: {
-        likedIds: updatedLikedIds
-      }
-    });
+        hasNotification: true,
+      },
+    })
+    const updateUser = await prisma.post.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        likedIds: [...updatedLikedIds],
+      },
+    })
 
-    return res.status(200).json(updatedPost);
+    return new Response(JSON.stringify(updateUser))
   } catch (error) {
-    console.log(error);
-    return res.status(400).end();
+    return new Response(JSON.stringify(error))
+  }
+}
+
+export const PATCH = async (request: Request) => {
+  try {
+    const currentUser = await getSession()
+    const usersId = await request.json()
+    const postId: string = usersId.data.postId
+    const userId: string = usersId.data.userId
+ 
+    if (!currentUser) {
+      throw new Response(JSON.stringify('Invalid ID'))
+    }
+
+    const user = await prisma.post.findUnique({
+      where: {
+        id: postId,
+      },
+    })
+
+    if (!user) {
+      throw new Response(JSON.stringify('Invalid ID'))
+    }
+
+    let updatedLikedIds = [...(user?.likedIds || [])]
+
+    updatedLikedIds = updatedLikedIds.filter((likedIds) => likedIds !== userId)
+
+    await prisma.user.update({
+      where: {
+        id: user.userId,
+      },
+      data: {
+        hasNotification: false,
+      },
+    })
+    const updatedUser = await prisma.post.update({
+      where: {
+        id: user?.id,
+      },
+      data: {
+        likedIds: [...updatedLikedIds],
+      },
+    })
+
+    return new Response(JSON.stringify(updatedUser))
+  } catch (error) {
+    return new Response(JSON.stringify(error))
   }
 }

@@ -17,7 +17,7 @@ const Home = () => {
 
   return (
     <div className='bg-white dark:bg-[#050505] min-h-[100vh]'>
-      <header className='absolute inset-x-0 top-0 z-50'>
+      {/* <header className='absolute inset-x-0 top-0 z-50'>
         <nav
           className='flex items-center justify-between p-6 lg:px-8'
           aria-label='Global'
@@ -104,7 +104,7 @@ const Home = () => {
           </Dialog>
 
         </nav>
-      </header>
+      </header> */}
 
       <div className='relative isolate px-6 pt-14 lg:px-8'>
         <div
@@ -139,7 +139,7 @@ const Home = () => {
             </p>
             <div className='mt-10 flex items-center justify-center gap-x-6'>
               <Link
-                href='/user'
+                href='/twitter'
                 className='rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
               >
                 Get started

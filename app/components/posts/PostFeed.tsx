@@ -1,6 +1,6 @@
 'use client'
 
-import usePosts from '@/hooks/usePosts'
+import usePost from '@/hooks/usePost'
 
 import PostItem from './PostItem'
 
@@ -9,8 +9,8 @@ interface PostFeedProps {
 }
 
 const PostFeed: React.FC<PostFeedProps> = ({usersId}) => {
-  const {data: posts = []} = usePosts(usersId)
-
+  const {data: posts = [], mutate: mutatePost} = usePost(usersId as string)
+  mutatePost()
   return (
     <>
       {posts ? (
@@ -18,7 +18,7 @@ const PostFeed: React.FC<PostFeedProps> = ({usersId}) => {
           <PostItem usersId={usersId} key={post.id} data={post} />
         ))
       ) : (
-        <></>
+        <> </>
       )}
     </>
   )

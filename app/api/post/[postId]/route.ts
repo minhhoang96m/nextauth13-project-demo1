@@ -2,14 +2,14 @@ import prisma from '@/lib/prisma'
 
 export const GET = async (
   request: Request,
-  {params}: {params: {usersId: string}}
+  {params}: {params: {postId: string}}
 ) => {
   try {
-    const usersId = params.usersId
+    const postId = params.postId
 
-    const users = await prisma.post.findMany({
+    const post = await prisma.post.findUnique({
       where: {
-        userId: usersId,
+        id: postId,
       },
       include: {
         user: true,
@@ -25,7 +25,7 @@ export const GET = async (
     })
     
   
-    return new Response(JSON.stringify(users))
+    return new Response(JSON.stringify(post))
   } catch (error) {
     console.log(error)
     return new Response(JSON.stringify(error))

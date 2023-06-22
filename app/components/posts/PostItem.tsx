@@ -1,14 +1,14 @@
 'use client'
 
+import {formatDistanceToNowStrict} from 'date-fns'
 import {useRouter} from 'next/navigation'
 import {useCallback, useMemo} from 'react'
 import {AiFillHeart, AiOutlineHeart, AiOutlineMessage} from 'react-icons/ai'
-import {formatDistanceToNowStrict} from 'date-fns'
 
-import useLoginModal from '@/hooks/useLoginModal'
-import useCurrentUser from '@/hooks/useCurrentUser'
 import useLike from '@/hooks/useLike'
+import useLoginModal from '@/hooks/useLoginModal'
 
+import {useSession} from 'next-auth/react'
 import Avatar from '../Avatar'
 interface PostItemProps {
   data: Record<string, any>
@@ -19,20 +19,22 @@ const PostItem: React.FC<PostItemProps> = ({data = {}, usersId}) => {
   const router = useRouter()
   const loginModal = useLoginModal()
 
-  const {data: currentUser} = useCurrentUser()
+  const {data: currentUsers} = useSession()
+  const currentUser = currentUsers?.user
+
   const {hasLiked, toggleLike} = useLike({postId: data.id, usersId})
 
   const goToUser = useCallback(
     (ev: any) => {
       ev.stopPropagation()
-      router.push(`twitter/users/${data.user.id}`)
+      router.push(`twitter/users/${data.user.id ? data.user.id : ''}`)
     },
-    [router, data.user.id]
+    [router, data.userId]
   )
 
   const goToPost = useCallback(() => {
-    router.push(`twitter/posts/${data.user.id}`)
-  }, [router, data.user.id])
+    router.push(`twitter/post/${data.id ? data.id : ''}`)
+  }, [router, data.id])
 
   const onLike = useCallback(
     async (ev: any) => {
@@ -66,13 +68,14 @@ const PostItem: React.FC<PostItemProps> = ({data = {}, usersId}) => {
         p-5 
         cursor-pointer 
         hover:bg-neutral-900 
+        dark:hover:bg-[#F3F4F6]
         transition
       '
     >
       <div className='flex flex-row items-start gap-3'>
-        <Avatar usersId={data.user.id} />
+        <Avatar usersId={data.user?.id} />
         <div>
-          <div className='flex flex-row items-center gap-2'>
+          <div className='flex flex-row items-center gap-2 dark:text-black'>
             <p
               onClick={goToUser}
               className='
@@ -80,9 +83,10 @@ const PostItem: React.FC<PostItemProps> = ({data = {}, usersId}) => {
                 font-semibold 
                 cursor-pointer 
                 hover:underline
+                dark:text-black  
             '
             >
-              {data.user.name}
+              {data.user?.name}
             </p>
             <span
               onClick={goToUser}
@@ -92,14 +96,17 @@ const PostItem: React.FC<PostItemProps> = ({data = {}, usersId}) => {
                 hover:underline
                 hidden
                 md:block
+                dark:text-black
             '
             >
-              @{data.user.username}
+              @{data.user?.username}
             </span>
-            <span className='text-neutral-500 text-sm'>{createdAt}</span>
+            <span className='text-neutral-500 text-sm dark:text-black'>
+              {createdAt}
+            </span>
           </div>
-          <div className='text-white mt-1'>{data.body}</div>
-          <div className='flex flex-row items-center mt-3 gap-10'>
+          <div className='text-white mt-1 dark:text-black'>{data.body}</div>
+          <div className='flex flex-row items-center mt-3 gap-10 dark:text-black'>
             <div
               className='
                 flex 
@@ -110,6 +117,7 @@ const PostItem: React.FC<PostItemProps> = ({data = {}, usersId}) => {
                 cursor-pointer 
                 transition 
                 hover:text-sky-500
+                
             '
             >
               <AiOutlineMessage size={20} />

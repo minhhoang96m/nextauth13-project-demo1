@@ -1,14 +1,21 @@
 'use client'
 
+import { useTheme } from 'next-themes'
 import {useRouter} from 'next/navigation'
+import { useEffect, useState } from 'react'
 import {BsTwitter} from 'react-icons/bs'
 
 const SidebarLogo = () => {
   const router = useRouter()
+  const {resolvedTheme} = useTheme()
+  const [iconColor, setIconColor] = useState('')
 
+  useEffect(() => {
+    setIconColor(resolvedTheme === 'dark' ? 'black' : 'white')
+  }, [resolvedTheme])
   return (
     <div
-      onClick={() => router.push('/')}
+      onClick={() => router.push('/twitter')}
       className='
         rounded-full 
         h-14
@@ -22,7 +29,7 @@ const SidebarLogo = () => {
         cursor-pointer
     '
     >
-      <BsTwitter size={28} color='white' />
+      <BsTwitter size={28} color={iconColor} />
     </div>
   )
 }

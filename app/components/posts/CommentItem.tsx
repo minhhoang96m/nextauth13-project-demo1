@@ -36,6 +36,7 @@ const CommentItem: React.FC<CommentItemProps> = ({data = {}}) => {
         p-5 
         cursor-pointer 
         hover:bg-neutral-900 
+        dark:hover:bg-[#F3F4F6]
         transition
       '
     >
@@ -50,6 +51,7 @@ const CommentItem: React.FC<CommentItemProps> = ({data = {}}) => {
                 font-semibold 
                 cursor-pointer 
                 hover:underline
+                dark:text-black
             '
             >
               {data.user.name}
@@ -62,13 +64,14 @@ const CommentItem: React.FC<CommentItemProps> = ({data = {}}) => {
                 hover:underline
                 hidden
                 md:block
+                dark:text-black
             '
             >
               @{data.user.username}
             </span>
-            <span className='text-neutral-500 text-sm'>{createdAt}</span>
+            <span className='text-neutral-500 text-sm dark:text-black'>{createdAt}</span>
           </div>
-          <div className='text-white mt-1'>{data.body}</div>
+          <div className='text-white mt-1 dark:text-black'>{data.body}</div>
         </div>
       </div>
     </div>

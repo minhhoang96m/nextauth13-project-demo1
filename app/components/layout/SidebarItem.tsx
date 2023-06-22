@@ -1,12 +1,13 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { IconType } from 'react-icons'
 
 import useCurrentUser from '@/hooks/useCurrentUser'
 import useLoginModal from '@/hooks/useLoginModal'
 import { BsDot } from 'react-icons/bs'
+import { useTheme } from 'next-themes'
 
 interface SidebarItemProps {
   label: string
@@ -27,6 +28,13 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
 }) => {
   const router = useRouter()
   const loginModal = useLoginModal()
+
+  const {resolvedTheme} = useTheme()
+  const [iconColor, setIconColor] = useState('')
+
+  useEffect(() => {
+    setIconColor(resolvedTheme === 'dark' ? 'black' : 'white')
+  }, [resolvedTheme])
 
   const {data: currentUser} = useCurrentUser()
 
@@ -58,9 +66,10 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
         hover:bg-opacity-10 
         cursor-pointer 
         lg:hidden
+
       '
       >
-        <Icon size={28} color='white' />
+        <Icon size={28} color={iconColor} />
         {alert ? (
           <BsDot className='text-sky-500 absolute -top-4 left-0' size={70} />
         ) : null}
@@ -78,10 +87,11 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
         hover:bg-opacity-10 
         cursor-pointer
         items-center
+        dark:hover:bg-[#F3F4F6]
       '
       >
-        <Icon size={24} color='white' />
-        <p className='hidden lg:block text-white text-xl'>{label}</p>
+        <Icon size={24} color={iconColor} />
+        <p className='hidden lg:block text-white text-xl dark:text-black'>{label}</p>
         {alert ? (
           <BsDot className='text-sky-500 absolute -top-4 left-0' size={70} />
         ) : null}
