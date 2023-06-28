@@ -1,19 +1,21 @@
 import {POST as authOptions} from '@/app/api/auth/[...nextauth]/route'
 import prisma from '@/lib/prisma'
-import {getServerSession} from 'next-auth'
+import {Session, getServerSession} from 'next-auth'
 
-export const getSession = async () => {
-  const session = await getServerSession(authOptions)
-  if (!session) return null
-  return session
-}
+// export const getSession = async () => {
+//   const session = await getServerSession(authOptions)
+//   if (!session) return null
+//   return session
+// }
 
 export const POST = async (
   request: Request,
   {params}: {params: {usersId: string}}
 ) => {
   try {
-    const currentUser = await getSession()
+    // const currentUser = await getSession()
+
+    const currentUser = await getServerSession(authOptions) as Session
     const usersId = params.usersId
 
     if (currentUser) {
@@ -75,7 +77,9 @@ export const DELETE = async (
   {params}: {params: {usersId: string}}
 ) => {
   try {
-    const currentUser = await getSession()
+    // const currentUser = await getSession()
+
+    const currentUser = await getServerSession(authOptions) as Session
     const usersId = params.usersId
 
     if (currentUser) {

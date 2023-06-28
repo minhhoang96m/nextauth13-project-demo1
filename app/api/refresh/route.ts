@@ -15,7 +15,7 @@ export const POST = async (request: Request) => {
       },
     })
     if (user) {
-      const {password, access_token, refresh_token, ...userWithoutPass} = user
+      const {hashedPassword, access_token, refresh_token, ...userWithoutPass} = user
       const access_tokens = signJwtAccessToken(userWithoutPass)
       const result = {
         ...userWithoutPass,

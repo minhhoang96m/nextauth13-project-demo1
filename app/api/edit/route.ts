@@ -1,16 +1,18 @@
 import {GET as authOptions} from '@/app/api/auth/[...nextauth]/route'
 import prisma from '@/lib/prisma'
-import {getServerSession} from 'next-auth'
+import {Session, getServerSession} from 'next-auth'
 
-export const getSession = async () => {
-  const session = await getServerSession(authOptions)
-  if (!session) return null
-  return session
-}
+// export const getSession = async () => {
+//   const session = await getServerSession(authOptions)
+//   if (!session) return null
+//   return session
+// }
 
 export const PATCH = async (request: Request) => {
   try {
-    const currentUser = await getSession()
+    // const currentUser = await getSession()
+
+    const currentUser = await getServerSession(authOptions) as Session
     const {name, username, bio, profileImage, coverImage} = await request.json()
 
     if (!name) {

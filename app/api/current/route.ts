@@ -1,16 +1,18 @@
 import { GET as authOptions } from '@/app/api/auth/[...nextauth]/route'
 import prisma from '@/lib/prisma'
-import { getServerSession } from 'next-auth'
+import { Session, getServerSession } from 'next-auth'
 
-export const getSession = async () => {
-    const session = await getServerSession(authOptions)
-    if (!session) return null
-    return session
-}
+// export const getSession = async () => {
+//     const session = await getServerSession(authOptions)
+//     if (!session) return null
+//     return session
+// }
 
 export const GET = async (request: Request) => {
+  
 try {
-  const currentUser  = await getSession()
+  const currentUser = await getServerSession(authOptions) as Session
+  // const currentUser  = await getSession()
 
   if (currentUser) {
     const user = await prisma.user.findUnique({

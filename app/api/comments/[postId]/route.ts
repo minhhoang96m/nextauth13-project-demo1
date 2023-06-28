@@ -1,19 +1,21 @@
 import {POST as authOptions} from '@/app/api/auth/[...nextauth]/route'
 import prisma from '@/lib/prisma'
-import {getServerSession} from 'next-auth'
+import {Session, getServerSession} from 'next-auth'
 
-export const getSession = async () => {
-  const session = await getServerSession(authOptions)
-  if (!session) return null
-  return session
-}
+// export const getSession = async () : Promise<Session | null> => {
+//   const session = await getServerSession(authOptions) as Session
+//   if (!session) return null
+//   return session
+// }
 
 export const POST = async (
   request: Request,
   {params}: {params: {postId: string}}
 ) => {
   try {
-    const currentUser = await getSession()
+    // const currentUser: Session | null  = await getSession()
+    
+    const currentUser = await getServerSession(authOptions) as Session
     const header = await request.json()
 
     const postId = params.postId
@@ -22,7 +24,7 @@ export const POST = async (
     const body : string = header.data.body
 
     if (!currentUser) {
-      throw new Response(JSON.stringify('Invalid ID'))
+      return new Response(JSON.stringify('Invalid ID'))
     }
 
     const comment = await prisma.comment.create({
@@ -59,7 +61,7 @@ export const POST = async (
         })
       }
     } catch (error) {
-      console.log(error)
+      return new Response(JSON.stringify(error), { status: 500 })
     }
     // NOTIFICATION PART END
 
