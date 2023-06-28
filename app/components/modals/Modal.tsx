@@ -10,6 +10,7 @@ interface ModalProps {
   onClose: () => void
   onSubmit: () => void
   title?: string
+  bodyTitle?: boolean
   body?: React.ReactElement
   footer?: React.ReactElement
   actionLabel: string
@@ -23,6 +24,7 @@ const Modal: React.FC<ModalProps> = ({
   onClose,
   onSubmit,
   title,
+  bodyTitle,
   body,
   actionLabel,
   footer,
@@ -78,10 +80,11 @@ const Modal: React.FC<ModalProps> = ({
           overflow-y-auto 
           fixed 
           inset-0 
-          z-50 
+          z-50
           outline-none 
           focus:outline-none
           bg-neutral-800/70
+
         '
       >
         <div
@@ -152,7 +155,9 @@ const Modal: React.FC<ModalProps> = ({
                 >
                   <IoMdClose size={18} />
                 </button>
-                <div className='text-lg font-semibold dark:text-black'>{title}</div>
+                <div className='text-lg font-semibold dark:text-black'>
+                  {title}
+                </div>
               </div>
               {/*body*/}
               <div className='relative p-6 flex-auto'>{body}</div>
@@ -162,7 +167,7 @@ const Modal: React.FC<ModalProps> = ({
                   className='
                     flex 
                     flex-row 
-                    items-center 
+                    justify-center 
                     gap-4 
                     w-full
                   '
@@ -175,8 +180,9 @@ const Modal: React.FC<ModalProps> = ({
                       outline
                     />
                   )}
+
                   <Button
-                    disabled={disabled}
+                    disabled={disabled || bodyTitle}
                     label={actionLabel}
                     onClick={handleSubmit}
                   />

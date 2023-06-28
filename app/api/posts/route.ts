@@ -1,12 +1,4 @@
-import {GET as authOptions} from '@/app/api/auth/[...nextauth]/route'
 import prisma from '@/lib/prisma'
-import {getServerSession} from 'next-auth'
-
-export const getSession = async () => {
-  const session = await getServerSession(authOptions)
-  if (!session) return null
-  return session
-}
 
 export const GET = async (request: Request) => {
   try {
@@ -28,23 +20,25 @@ export const GET = async (request: Request) => {
 
 export const POST = async (request: Request) => {
   try {
-    const currentUser = await getSession()
     const header = await request.json()
-    const body : string = header.data.body
+    
+    const body: string = header.data.body
+    const userId : string = header.data.userId
 
     const post = await prisma.post.create({
       data: {
         body,
         user: {
           connect: {
-            email: currentUser?.user.email as string,
+            id: userId,
           },
         },
       },
     })
     return new Response(JSON.stringify(post))
   } catch (error) {
-    // console.log(error)
+    console.log(error)
     return new Response().status
   }
 }
+

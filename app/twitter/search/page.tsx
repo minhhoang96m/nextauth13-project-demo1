@@ -1,12 +1,14 @@
 import Header from "@/app/components/Header";
+import SearchModal from "@/app/components/modals/SearchModal";
 
 
-const Search = () => {
+const SearchModals = () => {
+
   return ( 
     <>
-      <Header label="Search" />
+      <SearchModal />
     </>
    );
 }
  
-export default Search;
+export default SearchModals

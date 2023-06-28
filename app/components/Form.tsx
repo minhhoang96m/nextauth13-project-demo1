@@ -11,7 +11,7 @@ import useRegisterModal from '@/hooks/useRegisterModal'
 
 import {useSession} from 'next-auth/react'
 import Avatar from './Avatar'
-import Button from './Button'
+import Button from './Buttons'
 
 interface FormProps {
   placeholder: string
@@ -22,11 +22,12 @@ interface FormProps {
 const Form: React.FC<FormProps> = ({placeholder, isComment, postId}) => {
   const registerModal = useRegisterModal()
   const loginModal = useLoginModal()
+
   const {data: currentUser} = useSession()
   const userId = currentUser?.user.id
 
   const {mutate: mutatePosts} = usePosts(postId)
-  const {mutate: mutatePost} = usePost(userId as string)
+  const {mutate: mutatePost} = usePost()
 
   const [body, setBody] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -40,20 +41,27 @@ const Form: React.FC<FormProps> = ({placeholder, isComment, postId}) => {
       await axios.post(url, {data: {userId, body}})
 
       toast.success('Tweet created')
+
       setBody('')
-      mutatePosts()
+
       mutatePost()
+
+      mutatePosts()
     } catch (error) {
       toast.error('Something went wrong')
     } finally {
       setIsLoading(false)
     }
-  }, [body, mutatePosts, isComment, postId, mutatePost])
+  }, [body, mutatePosts, isComment, userId, postId, mutatePost])
 
   return (
-    <div className='border-b-[1px] border-neutral-800 px-5 py-2'>
+    <div
+      className='hidden sm:block sm:border-b-[1px] sm:border-neutral-800 sm:px-5 sm:py-2'
+    >
       {currentUser ? (
-        <div className='flex flex-row gap-4'>
+        <div
+          className='flex flex-row gap-4'
+        >
           <div>
             <Avatar usersId={currentUser?.user.id} />
           </div>
@@ -93,7 +101,7 @@ const Form: React.FC<FormProps> = ({placeholder, isComment, postId}) => {
               <Button
                 disabled={isLoading || !body}
                 onClick={onSubmit}
-                label='Posting'
+                label='Tweet'
               />
             </div>
           </div>
@@ -104,8 +112,8 @@ const Form: React.FC<FormProps> = ({placeholder, isComment, postId}) => {
             Welcome to Twitter
           </h1>
           <div className='flex flex-row items-center justify-center gap-4'>
-            <Button label='Login' onClick={loginModal.onOpen} />
-            <Button label='Register' onClick={registerModal.onOpen} />
+            <Button fullWidth label='Login' onClick={loginModal.onOpen} />
+            <Button fullWidth label='Register' onClick={registerModal.onOpen} />
           </div>
         </div>
       )}

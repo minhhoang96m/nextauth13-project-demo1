@@ -1,21 +1,20 @@
 'use client'
 
-import {useCallback, useState} from 'react'
-import {toast} from 'react-hot-toast'
-import {signIn} from 'next-auth/react'
-import {FieldValues, SubmitHandler, useForm} from 'react-hook-form'
-import {FcGoogle} from 'react-icons/fc'
-import {AiFillGithub} from 'react-icons/ai'
-import {useRouter} from 'next/navigation'
+import { signIn } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { useCallback, useState } from 'react'
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
+import { toast } from 'react-hot-toast'
+import { AiFillGithub } from 'react-icons/ai'
+import { FcGoogle } from 'react-icons/fc'
 
-import useRegisterModal from '@/hooks/useRegisterModal'
 import useLoginModal from '@/hooks/useLoginModal'
+import useRegisterModal from '@/hooks/useRegisterModal'
 
-import Modal from './Modal'
-import Input from '../inputs/Input'
-import Heading from '../Heading'
 import Button from '../Button'
-import {BsFacebook} from 'react-icons/bs'
+import Heading from '../Heading'
+import Input from '../inputs/Input'
+import Modal from './Modal'
 
 const LoginModal = () => {
   const router = useRouter()
@@ -103,7 +102,7 @@ const LoginModal = () => {
       text-neutral-500 text-center mt-4 font-light'
       >
         <p>
-          First time using Airbnb?
+          First time using Twitter?
           <span
             onClick={onToggle}
             className='
@@ -112,7 +111,6 @@ const LoginModal = () => {
               hover:underline
             '
           >
-            {' '}
             Create an account
           </span>
         </p>

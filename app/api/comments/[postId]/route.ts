@@ -15,9 +15,12 @@ export const POST = async (
   try {
     const currentUser = await getSession()
     const header = await request.json()
+
     const postId = params.postId
+
     const userId : string = header.data.userId
     const body : string = header.data.body
+
     if (!currentUser) {
       throw new Response(JSON.stringify('Invalid ID'))
     }
@@ -37,11 +40,11 @@ export const POST = async (
           id: postId,
         },
       })
-
+      
       if (post?.userId) {
         await prisma.notification.create({
           data: {
-            body: 'Someone replied on your tweet!',
+            body: `${currentUser.user.name} replied on your tweet!`,
             userId: post.userId,
           },
         })

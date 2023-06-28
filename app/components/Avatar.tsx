@@ -8,9 +8,10 @@ interface AvatarProps {
   usersId: string
   isLarge?: boolean
   hasBorder?: boolean
+  data?: boolean
 }
 
-const Avatar: React.FC<AvatarProps> = ({usersId, isLarge, hasBorder}) => {
+const Avatar: React.FC<AvatarProps> = ({usersId, isLarge, hasBorder, data}) => {
   const router = useRouter()
 
   const {data: fetchedUser} = useUser(usersId)
@@ -48,7 +49,7 @@ const Avatar: React.FC<AvatarProps> = ({usersId, isLarge, hasBorder}) => {
         sizes='(max-width: 768px) 100vw'
         priority={true}
         alt='Avatar'
-        onClick={onClick}
+        onClick={data ? undefined : onClick }
         src={fetchedUser?.image || fetchedUser?.profileImage || fetchedUser?.coverImage || '/images/placeholder.png'}
       />
     </div>

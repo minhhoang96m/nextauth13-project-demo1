@@ -4,15 +4,21 @@ import { BsTwitter } from "react-icons/bs";
 
 import useNotifications from "@/hooks/useNotifications";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 
 const NotificationsFeed = () => {
   const { data: currentUser, mutate: mutateCurrentUser } = useCurrentUser();
   const { data: fetchedNotifications = [] } = useNotifications(currentUser?.id);
-  console.log(fetchedNotifications)
+
+  const {resolvedTheme} = useTheme()
+  const [iconColor, setIconColor] = useState('')
+
   useEffect(() => {
     mutateCurrentUser();
-  }, [mutateCurrentUser]);
+
+    setIconColor(resolvedTheme === 'dark' ? 'black' : 'white')
+  }, [mutateCurrentUser,resolvedTheme]);
  
   if (fetchedNotifications.length === 0) {
     return (
@@ -21,13 +27,13 @@ const NotificationsFeed = () => {
       </div>
     )
   }
-  
+
   return ( 
     <div className="flex flex-col">
       {fetchedNotifications.map((notification: Record<string, any>) => (
         <div key={notification.id} className="flex flex-row items-center p-6 gap-4 border-b-[1px] border-neutral-800">
-          <BsTwitter color="white" size={32} />
-          <p className="text-white">
+          <BsTwitter color={iconColor} size={32} />
+          <p className="text-white dark:text-black">
             {notification.body}
           </p>
         </div>

@@ -8,6 +8,7 @@ import LoginModal from '../components/modals/LoginModal'
 import RegisterModal from '../components/modals/RegisterModal'
 import '../globals.css'
 import Provider from '../providers/provider'
+import PostModal from '../components/modals/PostModal'
 
 export default function TwitterLayout({children}: {children: React.ReactNode}) {
   return (
@@ -17,6 +18,7 @@ export default function TwitterLayout({children}: {children: React.ReactNode}) {
           <Toaster />
           <RegisterModal />
           <LoginModal />
+          <PostModal />
           <EditModal />
           <Layout>{children}</Layout>
         </Provider>

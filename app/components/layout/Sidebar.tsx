@@ -1,25 +1,30 @@
 'use client'
 
-import { signOut } from 'next-auth/react'
-import { BiLogOut } from 'react-icons/bi'
-import { BsBellFill, BsHouseFill } from 'react-icons/bs'
-import { FaUser } from 'react-icons/fa'
+import {signOut} from 'next-auth/react'
+import {BiLogOut} from 'react-icons/bi'
+import {BsBellFill, BsHouseFill} from 'react-icons/bs'
+import {FaSearch, FaUser} from 'react-icons/fa'
 
 import useCurrentUser from '@/hooks/useCurrentUser'
 
 import SidebarItem from './SidebarItem'
 import SidebarLogo from './SidebarLogo'
 import SidebarTweetButton from './SidebarTweetButton'
-import { useEffect } from 'react'
 
 const Sidebar = () => {
-  const { data: currentUser, mutate : mutateUser } = useCurrentUser()
+  const {data: currentUser, mutate: mutateUser} = useCurrentUser()
   mutateUser()
   const items = [
     {
       icon: BsHouseFill,
       label: 'Home',
       href: '/twitter',
+    },
+    {
+      icon: FaSearch,
+      label: 'Explore',
+      href: `twitter/search`,
+      auth: true,
     },
     {
       icon: BsBellFill,
@@ -35,11 +40,15 @@ const Sidebar = () => {
       auth: true,
     },
   ]
- 
+
   return (
-    <div className='col-span-1 h-full pr-4 md:pr-6'>
-      <div className='flex flex-col items-end '>
-        <div className='space-y-2 lg:w-[230px] '>
+    <div className='col-span-1 lg:col-span-2 pr-4 md:pr-6 select-none'>
+      <div className='absolute z-10 top-[91vh] left-[19.5vw]
+      md:absolute md:top-[3.5em] md:left-[-4em]  
+      lg:relative lg:top-[6vh] lg:left-[0] '>
+        <div className='flex flex-row justify-center items-start space-y-2 w-[230px]
+         md:flex md:flex-col md:items-center 
+         lg:flex lg:flex-col lg:items-start   '>
           <SidebarLogo />
           {items.map((item) => (
             <SidebarItem

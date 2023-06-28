@@ -2,7 +2,6 @@
 
 import {BiSearch} from 'react-icons/bi'
 
-import useSearchModal from '@/hooks/useSearchModal'
 import {useEffect, useRef, useState} from 'react'
 import {FaCircleXmark} from 'react-icons/fa6'
 
@@ -11,14 +10,15 @@ import * as Tooltip from '@radix-ui/react-tooltip'
 import AccountSearch from '../ui/accountSearch'
 
 import axios from 'axios'
+import useSearchModalPage from '@/hooks/useSearchModalPage'
 
-const Search = () => {
-  const searchModal = useSearchModal()
+const SearchModal = () => {
+  const searchModal = useSearchModalPage()
 
   const [searchValue, setSearchValue] = useState('')
   const [searchResult, setSearchResult] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-  const [focus, setFocus] = useState(false)
+
   const debounce = useDebounce(searchValue, 2000)
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -59,7 +59,7 @@ const Search = () => {
 
   return (
     <Tooltip.Provider>
-      <Tooltip.Root open={searchModal.isOpen}>
+      <Tooltip.Root open={searchModal.isOpen }>
         <Tooltip.Trigger asChild={true}>
           <div
             onClick={searchModal.onOpen}
@@ -68,7 +68,7 @@ const Search = () => {
         w-full 
         md:w-auto 
         py-[5px] 
-        mb-2
+        my-2
         rounded-full 
         shadow-sm 
         transition 
@@ -116,7 +116,11 @@ const Search = () => {
                     type='text'
                     ref={inputRef}
                     className='
-            w-full
+            w-[67vw]
+            md:w-[67vw]
+            lg:w-[35vw]
+            xl:w-[33vw]
+            2xl:w-[16.5vw]
             min-h-[34px]
             text-sm 
             bg-black 
@@ -139,7 +143,7 @@ const Search = () => {
 
                 {searchValue && (
                   <button onClick={handleClick}>
-                    <FaCircleXmark size='18' color='#0CA5E9' />
+                    <FaCircleXmark size='26' color='#0CA5E9' />
                   </button>
                 )}
               </div>
@@ -148,7 +152,15 @@ const Search = () => {
         </Tooltip.Trigger>
         <Tooltip.Portal>
           <Tooltip.Content
-            className='w-[20rem] min-h-[25rem] max-h-[50vh] data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade text-violet11 select-none rounded-[4px] bg-white px-[15px] py-[10px] text-[15px] leading-none shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] will-change-[transform,opacity]'
+            className='z-50 w-[100vw] h-[100vh]
+             md:w-[80vw]  
+             lg:w-[45vw] lg:h-[100vh] 
+             xl:w-[41vw]
+             2xl:w-[21vw]
+             data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade 
+             data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade 
+             text-violet11 select-none rounded-[4px] bg-white px-[15px] py-[10px] text-[15px] leading-none shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] 
+             will-change-[transform,opacity]'
             sideOffset={5}
             onPointerDownOutside={() => {
               searchModal.onClose()
@@ -157,7 +169,7 @@ const Search = () => {
             {searchValue ? (
               <AccountSearch data={searchResult} isLoading={isLoading} />
             ) : (
-              <p className='text-[12px] dark:text-black'>
+              <p className='text-[12px] text-center dark:text-black'>
                 Try searching for people, topics, or keywords
               </p>
             )}
@@ -168,4 +180,4 @@ const Search = () => {
   )
 }
 
-export default Search
+export default SearchModal

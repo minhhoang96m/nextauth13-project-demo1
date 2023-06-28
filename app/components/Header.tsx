@@ -16,13 +16,13 @@ const Header: React.FC<HeaderProps> = ({showBackArrow, label}) => {
   const handleBack = useCallback(() => {
     router.back()
   }, [router])
+  
   const {resolvedTheme} = useTheme()
   const [iconColor, setIconColor] = useState('')
 
   useEffect(() => {
     setIconColor(resolvedTheme === 'dark' ? 'black' : 'white')
   }, [resolvedTheme])
-
 
   return (
     <div className='border-b-[1px] border-neutral-800 p-5 select-none'>

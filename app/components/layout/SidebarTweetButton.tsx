@@ -6,10 +6,12 @@ import { FaFeather } from 'react-icons/fa'
 
 import useCurrentUser from '@/hooks/useCurrentUser'
 import useLoginModal from '@/hooks/useLoginModal'
+import usePostModal from '@/hooks/usePostModal'
 
 const SidebarTweetButton = () => {
   const router = useRouter()
   const loginModal = useLoginModal()
+  const postModal = usePostModal()
   const {data: currentUser} = useCurrentUser()
 
 
@@ -17,14 +19,18 @@ const SidebarTweetButton = () => {
     if (!currentUser) {
       return loginModal.onOpen()
     }
+   
+    postModal.onOpen()
 
-    router.push('/')
-  }, [loginModal, router, currentUser])
+  }, [loginModal, postModal , currentUser])
 
   return (
     <div onClick={onClick}>
       <div
         className='
+        absolute
+        top-[-80px]
+        left-[13em]
         mt-6
         lg:hidden 
         rounded-full 
@@ -38,6 +44,11 @@ const SidebarTweetButton = () => {
         hover:bg-opacity-80 
         transition 
         cursor-pointer
+
+        md:absolute
+        md:top-[15em]
+        md:left-[5.6em]
+        
       '
       >
         <FaFeather size={24} color='white' />
@@ -46,7 +57,9 @@ const SidebarTweetButton = () => {
         className='
         mt-6
         hidden 
-        lg:block 
+        
+        lg:block
+        lg:w-[11rem] 
         px-4
         py-2
         rounded-full

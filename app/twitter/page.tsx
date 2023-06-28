@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <>
       <Header label="Home" />
-      <Form placeholder="Write Here" />
+      <Form placeholder="What is happening" />
       <PostFeed />
     </>
   )

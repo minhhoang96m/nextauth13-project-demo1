@@ -4,13 +4,14 @@ import usePost from '@/hooks/usePost'
 
 import PostItem from './PostItem'
 
+
 interface PostFeedProps {
   usersId?: string
 }
 
 const PostFeed: React.FC<PostFeedProps> = ({usersId}) => {
-  const {data: posts = [], mutate: mutatePost} = usePost(usersId as string)
-  mutatePost()
+  const {data: posts = []} = usePost(usersId as string)
+
   return (
     <>
       {posts ? (
