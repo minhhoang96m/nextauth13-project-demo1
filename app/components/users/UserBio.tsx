@@ -7,7 +7,7 @@ import useUser from '@/hooks/useUser'
 import useFollow from '@/hooks/useFollow'
 import useEditModal from '@/hooks/useEditModal'
 
-import Button from '../Buttons'
+import Button from '../inputs/Buttons'
 
 interface UserBioProps {
   usersId: string

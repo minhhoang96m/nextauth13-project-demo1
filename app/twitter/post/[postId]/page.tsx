@@ -3,7 +3,7 @@
 import { ClipLoader } from 'react-spinners'
 
 import Form from '@/app/components/Form'
-import Header from '@/app/components/Header'
+import Header from '@/app/components/layout/Header'
 import CommentFeed from '@/app/components/posts/CommentFeed'
 import PostItem from '@/app/components/posts/PostItem'
 import usePosts from '@/hooks/usePosts'

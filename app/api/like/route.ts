@@ -2,17 +2,9 @@ import {POST as authOptions} from '@/app/api/auth/[...nextauth]/route'
 import prisma from '@/lib/prisma'
 import {Session, getServerSession} from 'next-auth'
 
-// export const getSession = async () => {
-//   const session = await getServerSession(authOptions)
-//   if (!session) return null
-//   return session
-// }
-
 export const POST = async (request: Request) => {
   try {
-    // const currentUser = await getSession()
-
-    const currentUser = await getServerSession(authOptions) as Session
+    const currentUser = (await getServerSession(authOptions)) as Session
     const usersId = await request.json()
     const postId: string = usersId.data.postId
     const userId: string = usersId.data.userId
@@ -72,12 +64,12 @@ export const PATCH = async (request: Request) => {
   try {
     // const currentUser = await getSession()
 
-    const currentUser = await getServerSession(authOptions) as Session
-    
+    const currentUser = (await getServerSession(authOptions)) as Session
+
     const usersId = await request.json()
     const postId: string = usersId.data.postId
     const userId: string = usersId.data.userId
- 
+
     if (!currentUser) {
       throw new Response(JSON.stringify('Invalid ID'))
     }

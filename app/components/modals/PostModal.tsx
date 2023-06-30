@@ -12,7 +12,7 @@ import {useSession} from 'next-auth/react'
 import axios from 'axios'
 import {FieldValues, SubmitHandler, useForm} from 'react-hook-form'
 import toast from 'react-hot-toast'
-import Avatar from '../Avatar'
+import Avatar from '../inputs/Avatar'
 
 const PostModal = () => {
   const {data: currentUser} = useSession()

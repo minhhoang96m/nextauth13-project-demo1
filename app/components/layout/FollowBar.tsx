@@ -1,7 +1,7 @@
 import useUsers from '@/hooks/useUsers'
 
 import { usePathname } from 'next/navigation'
-import Avatar from '../Avatar'
+import Avatar from '../inputs/Avatar'
 import Search from '../navbar/Search'
 
 const FollowBar = () => {

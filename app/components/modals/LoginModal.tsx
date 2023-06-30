@@ -11,8 +11,8 @@ import { FcGoogle } from 'react-icons/fc'
 import useLoginModal from '@/hooks/useLoginModal'
 import useRegisterModal from '@/hooks/useRegisterModal'
 
-import Button from '../Button'
-import Heading from '../Heading'
+import Button from '../inputs/Button'
+import Heading from '../layout/Heading'
 import Input from '../inputs/Input'
 import Modal from './Modal'
 

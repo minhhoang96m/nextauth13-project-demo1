@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import useUser from "@/hooks/useUser";
 
-import Avatar from "../Avatar"
+import Avatar from "../inputs/Avatar"
 
 interface UserHeroProps {
   usersId: string;

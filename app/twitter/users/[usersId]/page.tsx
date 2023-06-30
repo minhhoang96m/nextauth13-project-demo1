@@ -2,7 +2,7 @@
 
 import {ClipLoader} from 'react-spinners'
 
-import Header from '@/app/components/Header'
+import Header from '@/app/components/layout/Header'
 import PostFeed from '@/app/components/posts/PostFeed'
 import UserBio from '@/app/components/users/UserBio'
 import UserHero from '@/app/components/users/UserHero'

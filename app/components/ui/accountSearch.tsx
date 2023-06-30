@@ -2,7 +2,7 @@ import {forwardRef} from 'react'
 
 import Link from 'next/link'
 
-import Avatar from '../Avatar'
+import Avatar from '../inputs/Avatar'
 
 import {RingLoader} from 'react-spinners'
 

@@ -7,7 +7,7 @@ import {AiOutlineMenu} from 'react-icons/ai'
 import useLoginModal from '@/hooks/useLoginModal'
 import useRegisterModal from '@/hooks/useRegisterModal'
 import {User} from '@/lib/types/interface'
-import Avatars from '../Avatars'
+import Avatars from '../inputs/Avatars'
 import MenuItem from './MenuItem'
 
 interface UserMenuProps {

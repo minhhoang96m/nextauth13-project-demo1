@@ -9,7 +9,7 @@ import useLike from '@/hooks/useLike'
 import useLoginModal from '@/hooks/useLoginModal'
 
 import {useSession} from 'next-auth/react'
-import Avatar from '../Avatar'
+import Avatar from '../inputs/Avatar'
 interface PostItemProps {
   data: Record<string, any>
   usersId?: string

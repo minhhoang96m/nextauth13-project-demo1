@@ -1,80 +1,69 @@
-// 'use client';
+import Image from 'next/image'
+import {useCallback, useState} from 'react'
+import {useDropzone} from 'react-dropzone'
 
-// import { CldUploadWidget } from "next-cloudinary";
-// import Image from "next/image";
-// import { useCallback } from "react";
-// import { TbPhotoPlus } from 'react-icons/tb'
+interface DropzoneProps {
+  onChange: (base64: string) => void
+  label: string
+  value?: string
+  disabled?: boolean
+}
 
-// declare global {
-//   var cloudinary: any
-// }
+const ImageUpload: React.FC<DropzoneProps> = ({
+  onChange,
+  label,
+  value,
+  disabled,
+}) => {
+  const [base64, setBase64] = useState(value)
 
-// const uploadPreset = "pgc9ehd5";
+  const handleChange = useCallback(
+    (base64: string) => {
+      onChange(base64)
+    },
+    [onChange]
+  )
 
-// interface ImageUploadProps {
-//   onChange: (value: string) => void;
-//   value: string;
-// }
+  const handleDrop = useCallback(
+    (files: any) => {
+      const file = files[0]
+      const reader = new FileReader()
+      reader.onload = (event: any) => {
+        setBase64(event.target.result)
+        handleChange(event.target.result)
+      }
+      reader.readAsDataURL(file)
+    },
+    [handleChange]
+  )
 
-// const ImageUpload: React.FC<ImageUploadProps> = ({
-//   onChange,
-//   value
-// }) => {
-//   const handleUpload = useCallback((result: any) => {
-//     onChange(result.info.secure_url);
-//   }, [onChange]);
+  const {getRootProps, getInputProps} = useDropzone({
+    maxFiles: 1,
+    onDrop: handleDrop,
+    disabled,
+    accept: {
+      'image/jpeg': [],
+      'image/png': [],
+    },
+  })
 
-//   return (
-//     <CldUploadWidget 
-//       onUpload={handleUpload} 
-//       uploadPreset={uploadPreset}
-//       options={{
-//         maxFiles: 1
-//       }}
-//     >
-//       {({ open }) => {
-//         return (
-//           <div
-//             onClick={() => open?.()}
-//             className="
-//               relative
-//               cursor-pointer
-//               hover:opacity-70
-//               transition
-//               border-dashed 
-//               border-2 
-//               p-20 
-//               border-neutral-300
-//               flex
-//               flex-col
-//               justify-center
-//               items-center
-//               gap-4
-//               text-neutral-600
-//             "
-//           >
-//             <TbPhotoPlus
-//               size={50}
-//             />
-//             <div className="font-semibold text-lg">
-//               Click to upload
-//             </div>
-//             {value && (
-//               <div className="
-//               absolute inset-0 w-full h-full">
-//                 <Image
-//                   fill 
-//                   style={{ objectFit: 'cover' }} 
-//                   src={value} 
-//                   alt="House" 
-//                 />
-//               </div>
-//             )}
-//           </div>
-//         ) 
-//     }}
-//     </CldUploadWidget>
-//   );
-// }
+  return (
+    <div
+      {...getRootProps({
+        className:
+          'w-full p-4 text-white text-center border-2 border-dotted rounded-md border-neutral-700 cursor-pointer',
+      })}
+    >
+      <input {...getInputProps()} />
+      {base64 ? (
+        <div className='flex items-center justify-center'>
+          <Image src={base64} height='100' width='100' alt='Uploaded image' />
+        </div>
+      ) : (
+        <p className='text-black'>{label}</p>
+      )}
+    </div>
+  )
+}
 
-// export default ImageUpload;
+export default ImageUpload

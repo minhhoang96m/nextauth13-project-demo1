@@ -2,19 +2,12 @@ import {POST as authOptions} from '@/app/api/auth/[...nextauth]/route'
 import prisma from '@/lib/prisma'
 import {Session, getServerSession} from 'next-auth'
 
-// export const getSession = async () : Promise<Session | null> => {
-//   const session = await getServerSession(authOptions) as Session
-//   if (!session) return null
-//   return session
-// }
 
 export const POST = async (
   request: Request,
   {params}: {params: {postId: string}}
 ) => {
   try {
-    // const currentUser: Session | null  = await getSession()
-    
     const currentUser = await getServerSession(authOptions) as Session
     const header = await request.json()
 

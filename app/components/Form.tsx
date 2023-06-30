@@ -10,8 +10,8 @@ import usePosts from '@/hooks/usePosts'
 import useRegisterModal from '@/hooks/useRegisterModal'
 
 import {useSession} from 'next-auth/react'
-import Avatar from './Avatar'
-import Button from './Buttons'
+import Avatar from './inputs/Avatar'
+import Button from './inputs/Buttons'
 
 interface FormProps {
   placeholder: string
